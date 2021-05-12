@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
         <Link className="link" to="/components"onClick={handleMenuIconClick}>
           <li className={theme==="Dark"?"dark":"light"}>HighScores</li>
         </Link>
-        <Switch onChange={()=>setTheme(theme===Theme.Dark?Theme.Light:Theme.Dark)} colorScheme="black" size="lg" style={{margin:"0 1rem"}} />
+        <Switch onChange={()=>setTheme(theme===Theme.Dark?Theme.Light:Theme.Dark)} colorScheme="blood" size="lg" style={{margin:"0 1rem"}} />
       </ul>
     </div>
   );
