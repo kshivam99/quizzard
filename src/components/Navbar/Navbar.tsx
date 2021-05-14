@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
       <div className="menu-icon" onClick={handleMenuIconClick}>
         {!showDropDownNav ? <FaBars /> : <FaTimes />}
       </div>
-      <Link className="link" to="/" onClick={handleMenuIconClick}>
+      <Link className="link" to="/" onClick={()=>setShowDropDownNav(false)}>
         <h2 className={theme==="Dark"?"dark":"light"}><span>Q</span>uizzard</h2>
       </Link>
 
