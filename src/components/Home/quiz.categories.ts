@@ -6,7 +6,7 @@ export type Topic = {
   };
 
 export const categories = async(setCategory: (topics: Topic[]) => void) => {
-    const endpoint = `http://localhost:3001/quizzes/topics`;
+    const endpoint = `https://quizzard99.herokuapp.com/quizzes/topics`;
     const res = await axios.get(endpoint);
     setCategory(res.data);
   };

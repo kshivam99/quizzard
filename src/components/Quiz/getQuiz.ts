@@ -15,7 +15,7 @@ export type Question = {
 export type QuestionsState = Question & { answers: string[], id: number };
 
 export const quizData = async (id: string | undefined): Promise<QuestionsState[]> => {
-  const endpoint = `http://localhost:3001/quizzes/${id}`;
+  const endpoint = `https://quizzard99.herokuapp.com/quizzes/${id}`;
   const res = await axios.get(endpoint);
   return res.data.map((question: Question, index: number) => ({
     ...question,
