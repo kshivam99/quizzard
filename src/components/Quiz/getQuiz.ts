@@ -9,6 +9,7 @@ export type Question = {
   incorrect_answers: string[];
   question: string;
   topic: string;
+  explanation: string;
 };
 
 export type QuestionsState = Question & { answers: string[], id: number };

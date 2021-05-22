@@ -39,7 +39,8 @@
 
 @media screen and (max-width: 760px) {
     .header{
-        margin-top: 2rem;
+        justify-content: flex-start;
+        padding-top: 10rem;
     }
     .header h1{
         font-size: 2rem;

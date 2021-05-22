@@ -3,30 +3,20 @@ import "./Quiz.css";
 import { useParams } from "react-router-dom";
 import { quizData } from "./getQuiz";
 import { QuestionsState } from "./getQuiz";
-import firebase, { projectFirestore } from "../../firebase/config";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/config";
 import Result from "./Result";
-import { useTheme, Theme } from "../../contexts/themeContext";
+import { useTheme } from "../../contexts/themeContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-let TOTAL_QUESTIONS: number;
-
 function Quiz() {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const { id } = useParams<{ id: string | undefined }>();
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionsState[]>([]);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
-  const [user] = useAuthState(auth);
-  const [time, setTime] = useState(-1);
-
-  // const name = categories.find(
-  //   (item) => JSON.stringify(item.id) === JSON.stringify(id)
-  // );
+  const [response, setResponse] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -34,29 +24,11 @@ function Quiz() {
       setGameOver(false);
       const newQuestions = await quizData(id);
       setQuestions(newQuestions);
-      TOTAL_QUESTIONS=questions.length;
       setScore(0);
       setQuestionNumber(1);
       setLoading(false);
     })();
   }, []);
-
-  // useEffect(() => {
-  //   setTime(30);
-  // }, [questionNumber]);
-
-  // useEffect((): any => {
-  //   const clearInterval = setInterval(() => {
-  //     setTime((prev) => prev - 1);
-  //   }, 1000);
-  //   return clearInterval;
-  // }, []);
-
-  // useEffect(() => {
-  //   if (time === 0) {
-  //     nextQuestion();
-  //   }
-  // }, [time]);
 
   const startQuiz = async () => {
     setLoading(true);
@@ -66,31 +38,31 @@ function Quiz() {
     setScore(0);
     setQuestionNumber(1);
     setLoading(false);
+    setResponse([]);
   };
 
-  // function postData() {
-  //   projectFirestore.collection(`highscores`).add({
-  //     user: user?.uid,
-  //     quizzes: [
-  //       {
-  //         id: id,
-  //         highscore: score,
-  //       },
-  //     ],
-  //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //   });
-  // }
-
-  const nextQuestion = () => {
+  const nextQuestion = (opt: string) => {
     const nextQ = questionNumber + 1;
-    if (nextQ === TOTAL_QUESTIONS) {
+    setResponse(prev=>prev.concat(opt));
+    if (nextQ === TOTAL_QUESTIONS+1) {
       setGameOver(true);
     } else {
       setQuestionNumber(nextQ);
     }
   };
 
-  console.log("question h ye", questions);
+
+  const submitAnswer = (option: string, answer: string)  => {
+    option === answer && setScore((prev) => prev + 1);
+    nextQuestion(option);
+  }
+
+  let TOTAL_QUESTIONS: number = questions.length;
+  let name: string = "";
+  if(questions.length){
+    name = questions[0].topic;
+  }
+
   return (
     <div
       className={
@@ -99,9 +71,7 @@ function Quiz() {
           : " quiz--body light--headers"
       }
     >
-      {/* <h1 className="quiz--title">{name?.topic}</h1> */}
-
-      {!gameOver ? <p className="score">Score: {score}</p> : null}
+      <h1 className="quiz--title">{name!=="" && name}</h1>
       {loading && (
         <CircularProgress
           style={{ margin: "10rem auto", width: "10rem", height: "10rem" }}
@@ -130,7 +100,7 @@ function Quiz() {
                     ["#A30000", 0.33],
                   ]}
                   onComplete={() => {
-                    nextQuestion();
+                    nextQuestion("");
                     return [true, 0];
                   }}
                 >
@@ -138,17 +108,11 @@ function Quiz() {
                 </CountdownCircleTimer>
               </div>
             </div>
-            <p
-              className="question"
-              dangerouslySetInnerHTML={{ __html: item.question }}
-            />
+            <p className="question">{item.question}</p>
             <div className="options">
               {item.answers.map((opt, index) => (
                 <div
-                  onClick={() => {
-                    opt === item.correct_answer && setScore((prev) => prev + 1);
-                    nextQuestion();
-                  }}
+                  onClick={() => submitAnswer(opt, item.correct_answer)}
                 >
                   <p>{index + 1}.</p>
                   <p>{opt}</p>
@@ -158,16 +122,11 @@ function Quiz() {
           </div>
         ))}
       {!gameOver && !loading && questionNumber !== TOTAL_QUESTIONS ? (
-        <button className="next" onClick={nextQuestion}>
+        <button className="next" onClick={()=>nextQuestion("")}>
           Next Question
         </button>
       ) : null}
-      {gameOver && (
-        <>
-          <p>Yay! you scored {score} out of 10</p>
-          <button onClick={startQuiz}>Try Again</button>
-        </>
-      )}
+      {gameOver && <Result questions={questions} responses={response} score={score/TOTAL_QUESTIONS} startQuiz={startQuiz}/>}
     </div>
   );
 }

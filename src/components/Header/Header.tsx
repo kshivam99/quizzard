@@ -27,9 +27,9 @@ function SignIn() {
 }
 
 const Header: React.FC = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const [user, loading] = useAuthState(auth);
-  console.log(user?.uid);
+  
   return (
     <div
       className={

@@ -4,7 +4,6 @@ import { categories, Topic } from "./quiz.categories";
 import { Link } from "react-router-dom";
 import { TextField } from "@material-ui/core";
 import { useTheme } from "../../contexts/themeContext";
-import axios from "axios";
 
 
 type QuizProps = {

@@ -17,7 +17,6 @@ const Navbar: React.FC = () => {
     setShowDropDownNav((prev) => !prev);
   }
 
-  console.log(theme);
   return (
     <div className={theme === "Dark" ? "nav dark" : "nav light"}>
       <div className="menu-icon" onClick={handleMenuIconClick}>
@@ -29,7 +28,7 @@ const Navbar: React.FC = () => {
         </h2>
       </Link>
 
-      <ul className={!showDropDownNav ? "menu" : "menu active"}>
+      <ul style={{backgroundColor:theme === "Dark" ? "#151515":"#fff"}} className={!showDropDownNav ? "menu" : "menu active"}>
         <Link className="link" to="/quizzes" onClick={handleMenuIconClick}>
           <li className={theme === "Dark" ? "dark" : "light"}>Quizzes</li>
         </Link>
@@ -38,6 +37,7 @@ const Navbar: React.FC = () => {
         </Link>
         {user && <li onClick={() => auth.signOut()}>Sign out</li>}
         <Switch
+          defaultChecked
           onChange={() =>
             setTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark)
           }

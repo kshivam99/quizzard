@@ -13,7 +13,7 @@ export type ThemeContextType = {
 export const ThemeContext = createContext<ThemeContextType>({ theme: Theme.Dark, setTheme: theme => console.warn('no theme provider')});
 
 export const ThemeProvider: React.FC = ({children}) => {
-        const [ theme, setTheme ] = useState(Theme.Light);
+        const [ theme, setTheme ] = useState(Theme.Dark);
 
         return(
             <ThemeContext.Provider value={{ theme, setTheme }}>
