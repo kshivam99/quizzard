@@ -1,22 +1,21 @@
 import React from "react";
 import "./Navbar.css";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useTheme, Theme } from "../../contexts/themeContext";
-import { auth } from "../../firebase/config";
 import Switch from '@material-ui/core/Switch';
+import { useAuth } from "../../contexts/authContext";
 
 const Navbar: React.FC = () => {
   const [showDropDownNav, setShowDropDownNav] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [user] = useAuthState(auth);
+  const { auth } = useAuth();
 
   function handleMenuIconClick() {
     setShowDropDownNav((prev) => !prev);
   }
-
+  
   return (
     <div className={theme === "Dark" ? "nav dark" : "nav light"}>
       <div className="menu-icon" onClick={handleMenuIconClick}>
@@ -30,12 +29,14 @@ const Navbar: React.FC = () => {
 
       <ul style={{backgroundColor:theme === "Dark" ? "#151515":"#fff"}} className={!showDropDownNav ? "menu" : "menu active"}>
         <Link className="link" to="/quizzes" onClick={handleMenuIconClick}>
-          <li className={theme === "Dark" ? "dark" : "light"}>Quizzes</li>
+        {auth && <li className={theme === "Dark" ? "dark" : "light"}>Quizzes</li>}
         </Link>
         <Link className="link" to="/components" onClick={handleMenuIconClick}>
-          <li className={theme === "Dark" ? "dark" : "light"}>HighScores</li>
+        {auth &&  <li className={theme === "Dark" ? "dark" : "light"}>HighScores</li>}
         </Link>
-        {user && <li onClick={() => auth.signOut()}>Sign out</li>}
+        <Link  className="link" to="/logout">
+        {auth && <li className={theme === "Dark" ? "dark" : "light"}>Sign out</li>}
+        </Link>
         <Switch
           defaultChecked
           onChange={() =>

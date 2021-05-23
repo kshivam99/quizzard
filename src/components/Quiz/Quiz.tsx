@@ -86,7 +86,7 @@ function Quiz() {
             className="question--body"
           >
             <div className="question--header">
-              <div className="question--number">{`${questionNumber}/${TOTAL_QUESTIONS}`}</div>
+              <div className="question--number"><span style={{color:"#DC2626"}}>{`${questionNumber}`}</span>{`/${TOTAL_QUESTIONS}`}</div>
               <div className="time--left">
                 <CountdownCircleTimer
                   key={questionNumber}
@@ -108,6 +108,7 @@ function Quiz() {
                 </CountdownCircleTimer>
               </div>
             </div>
+            <hr style={{margin:"2rem 0"}}/>
             <p className="question">{item.question}</p>
             <div className="options">
               {item.answers.map((opt, index) => (

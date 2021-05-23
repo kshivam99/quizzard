@@ -2,7 +2,7 @@ import React from "react";
 import "./Home.css";
 import { categories, Topic } from "./quiz.categories";
 import { Link } from "react-router-dom";
-import { TextField } from "@material-ui/core";
+import { CircularProgress, TextField } from "@material-ui/core";
 import { useTheme } from "../../contexts/themeContext";
 
 
@@ -23,9 +23,10 @@ const QuizItem: React.FC<{name: string}> = ({ name }: QuizProps) => {
 function Home() {
   const { theme } = useTheme();
   const [ category, setCategory ] = React.useState<Topic[]>([]);
+  const [ loading, setLoading ] = React.useState(false);
 
   React.useEffect(()=>{
-    categories(setCategory);
+    categories(setCategory, setLoading);
   },[])
 
   return (
@@ -36,6 +37,11 @@ function Home() {
       <div className={theme === "Dark"?"dark--header home--searchbar":"light--header home--searchbar"}>
       <TextField id="outlined-basic" label="Search Quiz" fullWidth variant="outlined" />
       </div>
+      {loading && (
+        <CircularProgress
+          style={{ margin: "10rem auto", width: "10rem", height: "10rem" }}
+        />
+      )}
       <div className="home--grid">
         {category && category.map((item: Topic) => (
           <Link className="link" to={`/quizzes/${item._id}`}>
