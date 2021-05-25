@@ -1,31 +1,38 @@
 import React, { createContext, useContext, useState } from "react";
 
-
 export type Score = {
-    topic: string;
-    user: string;
-    score: number;
-}
+  user: string | undefined;
+  highscore: number;
+  globalHighscore: number;
+};
 
+export type Scores = {
+  topic: string;
+  scores: Score[];
+};
 
 export type ScoreContextType = {
-    scores: Score[];
-    setScores: (scores: Score[]) => void;
-}
+  scores: Scores[];
+  setScores: (scores: Scores[]) => void;
+};
 
-const ScoreContext = createContext<ScoreContextType>({ scores: [], setScores: scores => console.log(scores) });;
+const ScoreContext = createContext<ScoreContextType>({
+  scores: [],
+  setScores: (scores) => console.log(scores),
+});
 
-export const ScoreProvider:React.FC = ({children}) => {
-    const [ scores, setScores ] = useState(JSON.parse(localStorage.getItem("score") || "null"));
+export const ScoreProvider: React.FC = ({ children }) => {
+  const [scores, setScores] = useState(
+    JSON.parse(localStorage.getItem("score") || "[]")
+  );
 
-    return(
-        <ScoreContext.Provider value={{ scores, setScores }}>
-            {children}
-        </ScoreContext.Provider>
-    );
-}
+  return (
+    <ScoreContext.Provider value={{ scores, setScores }}>
+      {children}
+    </ScoreContext.Provider>
+  );
+};
 
 export function useScore() {
-    return useContext(ScoreContext);
-  }
-  
+  return useContext(ScoreContext);
+}

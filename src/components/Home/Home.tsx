@@ -4,6 +4,8 @@ import { categories, Topic } from "./quiz.categories";
 import { Link } from "react-router-dom";
 import { CircularProgress, TextField } from "@material-ui/core";
 import { useTheme } from "../../contexts/themeContext";
+import { useScore } from "../../contexts/scoreContext";
+
 
 
 type QuizProps = {
@@ -24,6 +26,9 @@ function Home() {
   const { theme } = useTheme();
   const [ category, setCategory ] = React.useState<Topic[]>([]);
   const [ loading, setLoading ] = React.useState(false);
+  const { scores } = useScore();
+
+  console.log(scores, "context ka score")
 
   React.useEffect(()=>{
     categories(setCategory, setLoading);

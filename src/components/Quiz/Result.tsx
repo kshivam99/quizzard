@@ -14,11 +14,47 @@ type ResultProps = {
 
 function Result({ questions, responses, score, startQuiz }: ResultProps) {
   const { theme } = useTheme();
+  
+  // React.useEffect(() => {
+  //   const gameScores = getGameScores();
+
+  //   if(gameScores === undefined){
+  //     let newUserScore: Score = {
+  //       user: auth?.user._id,
+  //       highscore: score,
+  //       globalHighscore: score
+  //     }
+  //     let newScores: Scores[];
+  //     newScores = scores.concat({topic: name, scores: [newUserScore]});
+  //     console.log(newScores,"newScore");
+  //     setScores(newScores);  
+  //   }
+
+  //   const userScore = gameScores?.scores.find(item=>item.user === auth?.user._id);
+
+  //   if(userScore === undefined)
+  //   {
+  //     let newUserScore: Score = {
+  //       user: auth?.user._id,
+  //       highscore: score,
+  //       globalHighscore: score
+  //     }
+  //     let newScores: Scores[];
+  //     newScores = scores.map((item: Scores) =>(
+  //       item.topic === name? {...item, scores: [...item.scores, newUserScore]}: item));
+  //       name!== "" && setScores(newScores);
+  //     console.log(newScores, score ,"newScore");
+  //   }
+  //   console.log(userScore, "userscore");
+  // }, []);
+
+
+
 
   return (
     <div className="result--container">
       <h1>You scored {(score * 100).toFixed(2)}%</h1>
-      <hr style={{width:"80vw", marginBottom:"2rem"}}/>
+      <hr style={{ width: "80vw", marginBottom: "2rem" }} />
       {questions.map((que, index) => (
         <>
           <h1 className="question">
@@ -26,7 +62,7 @@ function Result({ questions, responses, score, startQuiz }: ResultProps) {
           </h1>
           <ol>
             {que.answers.map((opt) => (
-              <div style={{ display: "flex", alignItems:"center"}}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <li
                   style={{
                     color:
@@ -42,10 +78,10 @@ function Result({ questions, responses, score, startQuiz }: ResultProps) {
                   {opt}
                 </li>
                 {opt === responses[index] && opt !== que.correct_answer && (
-                  <ImCross className="icon" color="red" size={24}/>
+                  <ImCross className="icon" color="red" size={24} />
                 )}
                 {opt === responses[index] && opt === que.correct_answer && (
-                  <FaCheck className="icon" color="green" size={24}/>
+                  <FaCheck className="icon" color="green" size={24} />
                 )}
               </div>
             ))}
@@ -54,7 +90,7 @@ function Result({ questions, responses, score, startQuiz }: ResultProps) {
           </ol>
         </>
       ))}
-      <button onClick={startQuiz}>Try Again</button>
+      <button className="again" onClick={startQuiz}>Try Again</button>
     </div>
   );
 }

@@ -6,17 +6,21 @@ import { QuestionsState } from "./getQuiz";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Result from "./Result";
 import { useTheme } from "../../contexts/themeContext";
+import { useScore, Scores, Score } from "../../contexts/scoreContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useAuth } from "../../contexts/authContext";
 
 function Quiz() {
   const { theme } = useTheme();
   const { id } = useParams<{ id: string | undefined }>();
+  const { auth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionsState[]>([]);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
   const [response, setResponse] = useState<string[]>([]);
+  const { scores, setScores } = useScore();
 
   useEffect(() => {
     (async () => {
@@ -46,6 +50,7 @@ function Quiz() {
     setResponse(prev=>prev.concat(opt));
     if (nextQ === TOTAL_QUESTIONS+1) {
       setGameOver(true);
+      updateHighScore();
     } else {
       setQuestionNumber(nextQ);
     }
@@ -55,6 +60,24 @@ function Quiz() {
   const submitAnswer = (option: string, answer: string)  => {
     option === answer && setScore((prev) => prev + 1);
     nextQuestion(option);
+  }
+
+  function getGameScores() {
+    return scores.find((item) => item.topic === name);
+  }
+
+  const updateHighScore = () => {
+    const gameScores = getGameScores();
+    if(gameScores === undefined){
+      let newUserScore: Score = {
+        user: auth?.user._id,
+        highscore: score,
+        globalHighscore: score
+      }
+      let newScores: Scores[];
+      newScores = scores.concat({topic: name, scores: [newUserScore]});
+      setScores(newScores);  
+    }
   }
 
   let TOTAL_QUESTIONS: number = questions.length;
